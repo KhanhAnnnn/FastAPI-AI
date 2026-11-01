@@ -1,0 +1,1129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Local Generative AI Lab</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      max-width: 1240px;
+      margin: 1.5rem auto;
+      padding: 0 1.25rem;
+      font: 15px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      background: #f8fafc;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: .75rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+    }
+    .header-subtitle {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    nav#tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-bottom: 1.25rem;
+    }
+    nav#tabs button {
+      padding: .5rem 1rem;
+      font-size: .92rem;
+      font-weight: 500;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      color: #475569;
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+    nav#tabs button:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+      border-color: #94a3b8;
+    }
+    nav#tabs button.active {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #1d4ed8;
+      font-weight: 600;
+      box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+    }
+    #status-bar {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .88rem;
+      font-weight: 500;
+      color: #475569;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: .45rem .85rem;
+      margin-bottom: 1.25rem;
+    }
+    #status-bar .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+    }
+    #panel {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      min-height: 480px;
+    }
+
+    /* Common input styles */
+    button, input, textarea, select {
+      font: inherit;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      padding: .5rem .75rem;
+      background: #ffffff;
+      color: #1e293b;
+    }
+    button { cursor: pointer; }
+    textarea { width: 100%; min-height: 5rem; box-sizing: border-box; resize: vertical; }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+    img, video { max-width: 100%; display: block; margin-top: 1rem; border-radius: 6px; }
+    pre { white-space: pre-wrap; word-break: break-word; }
+
+    /* Button styles */
+    .btn-primary { background: #2563eb; color: #fff; border-color: #1d4ed8; font-weight: 600; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-secondary { background: #f8fafc; color: #334155; border-color: #cbd5e1; }
+    .btn-secondary:hover { background: #e2e8f0; }
+    .btn-success { background: #16a34a; color: #fff; border-color: #15803d; font-weight: 600; }
+    .btn-success:hover { background: #15803d; }
+    .btn-sm { padding: .3rem .6rem; font-size: .82rem; }
+    .btn-xs { padding: .2rem .5rem; font-size: .78rem; border-radius: 4px; }
+
+    /* Pipeline Status Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+    .badge-COMPLETED { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+    .badge-INDEXING, .badge-EMBEDDING, .badge-EXTRACTING, .badge-QUEUED {
+      background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;
+    }
+    .badge-FAILED { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+    .badge-CANCELLED { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+    .badge-UPLOADED { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+
+    /* RAG 2-Column Responsive Workspace */
+    .rag-workspace {
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+    @media (max-width: 980px) {
+      .rag-workspace {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Cards */
+    .rag-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+    .rag-card:last-child { margin-bottom: 0; }
+    .rag-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: .85rem;
+      padding-bottom: .6rem;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .rag-card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      margin: 0;
+    }
+    .rag-card-subtitle {
+      font-size: 0.78rem;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    .rag-counter {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      background: #f1f5f9;
+      color: #475569;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    /* Upload Zone */
+    .rag-upload-zone {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      padding: .85rem;
+      margin-bottom: .85rem;
+    }
+    .rag-upload-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .5rem;
+      flex-wrap: wrap;
+      margin-top: .65rem;
+    }
+    .rag-toggle-label {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .82rem;
+      color: #334155;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .rag-toggle-label input { margin: 0; cursor: pointer; }
+
+    /* Pipeline Step Indicators */
+    .rag-pipeline-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: .72rem;
+      color: #94a3b8;
+      background: #f8fafc;
+      padding: .4rem .65rem;
+      border-radius: 6px;
+      margin-bottom: .85rem;
+      font-weight: 600;
+    }
+    .rag-pipeline-bar span { color: #475569; }
+
+    /* Document List */
+    .rag-doc-list {
+      display: flex;
+      flex-direction: column;
+      gap: .65rem;
+      max-height: 520px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+    .doc-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: .75rem;
+      background: #ffffff;
+      transition: all .15s ease;
+      cursor: pointer;
+    }
+    .doc-item:hover {
+      border-color: #94a3b8;
+      background: #fafbfc;
+    }
+    .doc-item.selected {
+      border-color: #2563eb;
+      background: #eff6ff;
+      box-shadow: 0 0 0 1.5px #2563eb;
+    }
+    .doc-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: .5rem;
+      margin-bottom: .35rem;
+    }
+    .doc-name {
+      font-weight: 600;
+      font-size: .88rem;
+      color: #0f172a;
+      word-break: break-all;
+    }
+    .doc-meta {
+      font-size: .75rem;
+      color: #64748b;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-bottom: .5rem;
+    }
+    .doc-actions {
+      display: flex;
+      gap: .4rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .btn-filter-active {
+      background: #2563eb;
+      color: #fff;
+      border-color: #1d4ed8;
+      font-weight: 600;
+    }
+
+    /* Q&A Controls */
+    .rag-controls-bar {
+      display: flex;
+      gap: .75rem;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      margin-top: .75rem;
+    }
+    .rag-control-group {
+      display: flex;
+      flex-direction: column;
+      gap: .25rem;
+      font-size: .8rem;
+      font-weight: 600;
+      color: #475569;
+    }
+    .rag-btn-group {
+      margin-left: auto;
+      display: flex;
+      gap: .5rem;
+    }
+
+    /* Loading State */
+    .rag-loading-state {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: .85rem 1.15rem;
+      margin: 1.25rem 0;
+    }
+    .spinner {
+      width: 22px;
+      height: 22px;
+      border: 3px solid #bfdbfe;
+      border-top-color: #2563eb;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text strong {
+      display: block;
+      font-size: .88rem;
+      color: #1e40af;
+    }
+    .loading-text span {
+      font-size: .78rem;
+      color: #3b82f6;
+    }
+
+    /* Metrics Bar */
+    .rag-metrics-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin: 1.25rem 0;
+    }
+    .metric-badge {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: .35rem .65rem;
+      display: flex;
+      flex-direction: column;
+      min-width: 95px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .metric-label {
+      font-size: .68rem;
+      color: #64748b;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: .03em;
+    }
+    .metric-val {
+      font-size: .92rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    /* Answer Card */
+    .rag-answer-card {
+      border-left: 4px solid #10b981;
+      background: #fcfdfd;
+    }
+    .rag-answer-content {
+      font-size: .96rem;
+      line-height: 1.6;
+      color: #064e3b;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 6px;
+      padding: 1rem 1.15rem;
+    }
+
+    /* Sources & Citations */
+    .rag-sources-card {
+      border-left: 4px solid #3b82f6;
+      background: #fcfdfd;
+    }
+    .rag-sources-list {
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+    }
+    .citation-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: .85rem;
+      transition: border-color .15s ease;
+    }
+    .citation-card:hover { border-color: #cbd5e1; }
+    .citation-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-bottom: .45rem;
+    }
+    .citation-tags {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      flex-wrap: wrap;
+    }
+    .tag-index {
+      background: #2563eb;
+      color: #fff;
+      font-size: .72rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+    .tag-page {
+      background: #e2e8f0;
+      color: #1e293b;
+      font-size: .72rem;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+    .tag-doc {
+      font-size: .72rem;
+      color: #64748b;
+      font-family: monospace;
+    }
+    .citation-score {
+      font-size: .78rem;
+      font-weight: 700;
+      color: #15803d;
+      background: #dcfce7;
+      border: 1px solid #bbf7d0;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .citation-excerpt {
+      font-size: .86rem;
+      line-height: 1.5;
+      color: #334155;
+      background: #f8fafc;
+      border-left: 3px solid #3b82f6;
+      padding: .5rem .75rem;
+      border-radius: 0 4px 4px 0;
+      word-break: break-word;
+    }
+    .btn-toggle-excerpt {
+      background: none;
+      border: none;
+      color: #2563eb;
+      font-size: .78rem;
+      font-weight: 600;
+      padding: 4px 0 0 0;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .btn-toggle-excerpt:hover { color: #1d4ed8; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Local Generative AI Lab</h1>
+      <div class="header-subtitle">Multi-modal AI inference & Semantic Retrieval-Augmented Generation</div>
+    </div>
+  </header>
+
+  <nav id="tabs"></nav>
+
+  <div id="status-bar">
+    <span class="status-dot"></span>
+    <span id="status">Ready</span>
+  </div>
+
+  <section id="panel"></section>
+
+  <script>
+    const definitions = [
+      { name: "Text", body: '<textarea id="prompt" placeholder="What is FastAPI?"></textarea><div style="margin: .75rem 0; display: flex; gap: .75rem; align-items: center;"><label>Tokens <input id="steps" type="number" min="1" max="512" value="128"></label> <label>Temperature <input id="temp" type="number" min="0" max="2" step="0.1" value="0.7"></label> <button id="go" class="btn-primary">Generate</button></div><pre id="result"></pre>' },
+      { name: "Audio", body: '<textarea id="prompt" placeholder="Text to speak"></textarea><div style="margin: .75rem 0; display: flex; gap: .75rem; align-items: center;"><select id="preset"><option>v2/en_speaker_1</option><option>v2/en_speaker_9</option></select> <button id="go" class="btn-primary">Generate</button></div><audio id="result" controls style="margin: 1rem 0;"></audio><br><a id="download" download="generated.wav">Download WAV</a>' },
+      { name: "Image", body: '<textarea id="prompt" placeholder="Describe an image"></textarea><div style="margin: .75rem 0; display: flex; gap: .75rem; align-items: center;"><label>Steps <input id="steps" type="number" min="1" max="50" value="10"></label> <label>Seed <input id="seed" type="number" value="42"></label> <button id="go" class="btn-primary">Generate</button></div><img id="result" alt="Generated image"><br><a id="download">Download PNG</a>' },
+      { name: "Video", body: '<input id="file" type="file" accept="image/*" required> <label>Frames <input id="frames" type="number" min="14" max="25" value="25"></label> <button id="go" class="btn-primary">Generate</button><video id="result" controls style="margin: 1rem 0;"></video><br><a id="download" download="generated.mp4">Download MP4</a>' },
+      { name: "3D", body: '<textarea id="prompt" placeholder="A small wooden chair"></textarea><div style="margin: .75rem 0; display: flex; gap: .75rem; align-items: center;"><label>Steps <input id="steps" type="number" min="1" max="100" value="25"></label> <button id="go" class="btn-primary">Generate</button></div><a id="download" download="generated.obj">Download OBJ</a>' },
+      {
+        name: "RAG",
+        body: `
+          <div class="rag-workspace">
+            <!-- Left Column: Knowledge Base Documents -->
+            <div class="rag-col-docs">
+              <div class="rag-card">
+                <div class="rag-card-header">
+                  <div class="rag-card-title">
+                    📄 Knowledge Base Documents
+                  </div>
+                  <span id="rag-doc-count" class="rag-counter">0 files</span>
+                </div>
+
+                <!-- Upload Area -->
+                <div class="rag-upload-zone">
+                  <input id="rag-file" type="file" accept="application/pdf" style="width: 100%; font-size: .85rem;">
+                  <div class="rag-upload-actions">
+                    <label class="rag-toggle-label" title="Automatically extract, chunk, embed, and index into Qdrant">
+                      <input id="rag-autoprocess" type="checkbox" checked>
+                      <span>Auto Process</span>
+                    </label>
+                    <div style="display: flex; gap: .4rem;">
+                      <button id="rag-refresh-btn" type="button" class="btn-secondary btn-sm" title="Refresh document list">
+                        ↻ Refresh
+                      </button>
+                      <button id="rag-upload-btn" type="button" class="btn-primary btn-sm">
+                        ⬆ Upload & Index
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Pipeline Stage Guide -->
+                <div class="rag-pipeline-bar">
+                  <span>1. Upload</span> →
+                  <span>2. Extract</span> →
+                  <span>3. Embed</span> →
+                  <span>4. Qdrant Index</span>
+                </div>
+
+                <!-- Documents List -->
+                <div id="rag-doc-list" class="rag-doc-list">
+                  <p style="color: #64748b; font-style: italic; font-size: .88rem; margin: .5rem 0;">Loading documents...</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column: Semantic Q&A -->
+            <div class="rag-col-qa">
+              <!-- Q&A Card -->
+              <div class="rag-card">
+                <div class="rag-card-header">
+                  <div>
+                    <div class="rag-card-title">
+                      💬 Semantic Q&A Workspace
+                    </div>
+                    <div class="rag-card-subtitle">Ask questions grounded in uploaded knowledge base documents</div>
+                  </div>
+                  <span class="rag-counter">TinyLlama-1.1B • Jina Cosine</span>
+                </div>
+
+                <textarea id="prompt" placeholder="Nhập câu hỏi dựa trên tài liệu (ví dụ: 'Tổng số học viên hoàn thành năm 2025 thấp hơn mục tiêu bao nhiêu người?')..."></textarea>
+
+                <div class="rag-controls-bar">
+                  <div class="rag-control-group" style="flex: 1; min-width: 170px;">
+                    <label for="rag-doc-select">Target Document:</label>
+                    <select id="rag-doc-select">
+                      <option value="">All Documents (Knowledgebase)</option>
+                    </select>
+                  </div>
+                  <div class="rag-control-group" style="width: 80px;">
+                    <label for="rag-topk" title="Number of chunks to retrieve">Top K:</label>
+                    <input id="rag-topk" type="number" min="1" max="20" value="3">
+                  </div>
+                  <div class="rag-control-group" style="width: 90px;">
+                    <label for="rag-threshold" title="Cosine similarity threshold">Threshold:</label>
+                    <input id="rag-threshold" type="number" min="0" max="1" step="0.05" value="0.5">
+                  </div>
+                  <div class="rag-btn-group">
+                    <button id="rag-clear-btn" type="button" class="btn-secondary">Clear</button>
+                    <button id="go" class="btn-success">
+                      ⚡ Ask Question
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Loading Indicator -->
+              <div id="rag-loading-bar" class="rag-loading-state" style="display: none;">
+                <div class="spinner"></div>
+                <div class="loading-text">
+                  <strong id="rag-loading-phase">Searching vector knowledge base...</strong>
+                  <span id="rag-loading-sub">Retrieving evidence chunks via Jina embeddings</span>
+                </div>
+              </div>
+
+              <!-- Metrics / Telemetry Badges -->
+              <div id="rag-metrics-card" class="rag-metrics-container" style="display: none;">
+                <div class="metric-badge">
+                  <span class="metric-label">Retrieval</span>
+                  <span class="metric-val" id="metric-retrieval">-- ms</span>
+                </div>
+                <div class="metric-badge">
+                  <span class="metric-label">Generation</span>
+                  <span class="metric-val" id="metric-generation">-- ms</span>
+                </div>
+                <div class="metric-badge">
+                  <span class="metric-label">Total Latency</span>
+                  <span class="metric-val" id="metric-total">-- ms</span>
+                </div>
+                <div class="metric-badge">
+                  <span class="metric-label">Model</span>
+                  <span class="metric-val" id="metric-model" style="font-size: .8rem;">TinyLlama-1.1B</span>
+                </div>
+                <div class="metric-badge">
+                  <span class="metric-label">Citations</span>
+                  <span class="metric-val" id="metric-count">0</span>
+                </div>
+              </div>
+
+              <!-- Grounded Answer Card -->
+              <div id="rag-answer-container" class="rag-card rag-answer-card" style="display: none;">
+                <div class="rag-card-header">
+                  <div>
+                    <div class="rag-card-title" style="color: #0f766e;">
+                      ✨ Grounded Answer
+                    </div>
+                    <div class="rag-card-subtitle">Synthesized by TinyLlama strictly from retrieved evidence</div>
+                  </div>
+                  <button id="rag-copy-btn" type="button" class="btn-secondary btn-xs" title="Copy answer to clipboard">
+                    📋 Copy Answer
+                  </button>
+                </div>
+                <div id="result" class="rag-answer-content"></div>
+              </div>
+
+              <!-- Sources & Citations Card -->
+              <div id="rag-sources-container" class="rag-card rag-sources-card" style="display: none;">
+                <div class="rag-card-header">
+                  <div>
+                    <div class="rag-card-title">
+                      📚 Retrieved Sources & Citations
+                    </div>
+                    <div class="rag-card-subtitle">Evidence chunks retrieved from Qdrant vector database (not the generated answer)</div>
+                  </div>
+                </div>
+                <div id="rag-sources" class="rag-sources-list"></div>
+              </div>
+            </div>
+          </div>
+        `
+      }
+    ];
+
+    const tabs = document.querySelector("#tabs"), panel = document.querySelector("#panel"), status = document.querySelector("#status");
+    let selected = 0, objectUrl = null, ragPollInterval = null;
+    let selectedDocId = "";
+
+    definitions.forEach((item, index) => {
+      const button = document.createElement("button");
+      button.textContent = item.name;
+      button.onclick = () => {
+        selected = index;
+        updateTabStyles();
+        render();
+      };
+      tabs.append(button);
+    });
+
+    function updateTabStyles() {
+      Array.from(tabs.children).forEach((b, idx) => {
+        b.className = idx === selected ? "active" : "";
+      });
+    }
+    updateTabStyles();
+
+    function render() {
+      if (objectUrl) { URL.revokeObjectURL(objectUrl); objectUrl = null; }
+      if (ragPollInterval) { clearInterval(ragPollInterval); ragPollInterval = null; }
+
+      panel.innerHTML = definitions[selected].body;
+      status.textContent = "Ready";
+
+      const goBtn = panel.querySelector("#go");
+      if (goBtn) goBtn.onclick = run;
+
+      if (selected === 5) {
+        initRagTab();
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    window.toggleCitation = function(idx) {
+      const fullEl = document.getElementById(`cite-full-${idx}`);
+      const btnEl = document.getElementById(`cite-btn-${idx}`);
+      const excerptEl = document.getElementById(`cite-excerpt-${idx}`);
+      if (!fullEl || !btnEl) return;
+
+      const isHidden = fullEl.style.display === "none";
+      if (isHidden) {
+        fullEl.style.display = "block";
+        if (excerptEl) excerptEl.style.display = "none";
+        btnEl.textContent = "Show less ▴";
+      } else {
+        fullEl.style.display = "none";
+        if (excerptEl) excerptEl.style.display = "block";
+        btnEl.textContent = `Show full chunk (${fullEl.dataset.len} chars) ▾`;
+      }
+    };
+
+    window.selectDocForChat = function(docId) {
+      selectedDocId = (selectedDocId === docId) ? "" : docId;
+      const selectEl = panel.querySelector("#rag-doc-select");
+      if (selectEl) {
+        selectEl.value = selectedDocId;
+      }
+      highlightSelectedDoc();
+    };
+
+    function highlightSelectedDoc() {
+      const docItems = panel.querySelectorAll(".doc-item");
+      docItems.forEach(el => {
+        const id = el.dataset.docId;
+        const isSel = id && id === selectedDocId;
+        el.className = isSel ? "doc-item selected" : "doc-item";
+        const btn = el.querySelector(".btn-filter-trigger");
+        if (btn) {
+          btn.className = isSel ? "btn-xs btn-filter-active" : "btn-xs btn-secondary";
+          btn.textContent = isSel ? "✓ Active Filter" : "Filter this doc";
+        }
+      });
+    }
+
+    async function fetchRagDocuments() {
+      const listEl = panel.querySelector("#rag-doc-list");
+      const selectEl = panel.querySelector("#rag-doc-select");
+      const countEl = panel.querySelector("#rag-doc-count");
+      if (!listEl) return;
+
+      try {
+        const res = await fetch("/rag/documents");
+        if (!res.ok) throw new Error("Failed to load documents");
+        const docs = await res.json();
+
+        if (countEl) countEl.textContent = `${docs.length} ${docs.length === 1 ? 'file' : 'files'}`;
+
+        if (docs.length === 0) {
+          listEl.innerHTML = '<p style="color: #64748b; font-style: italic; font-size: .88rem; margin: .5rem 0;">No PDF documents uploaded yet.</p>';
+          if (selectEl) selectEl.innerHTML = '<option value="">All Documents (Knowledgebase)</option>';
+          return;
+        }
+
+        let selectOptions = '<option value="">All Documents (Knowledgebase)</option>';
+        let listHtml = "";
+        let hasActive = false;
+
+        docs.forEach(doc => {
+          const isActive = ["QUEUED", "EXTRACTING", "EMBEDDING", "INDEXING"].includes(doc.status);
+          if (isActive) hasActive = true;
+
+          const isSelected = doc.document_id === selectedDocId;
+          const badgeClass = "badge badge-" + doc.status;
+          const pulseHtml = isActive ? '<span class="pulse-dot"></span>' : '';
+          const shortId = doc.document_id.slice(0, 8);
+          const sizeKb = doc.size_bytes ? (doc.size_bytes / 1024).toFixed(1) + " KB" : "";
+
+          const errorSubtext = (doc.status === "FAILED" && doc.error_message)
+            ? `<div style="color: #dc2626; font-size: 0.75rem; margin-top: 4px; padding: 3px 6px; background: #fee2e2; border-radius: 4px;" title="${escapeHtml(doc.error_message)}">
+                ⚠️ ${escapeHtml(doc.failure_stage ? `[${doc.failure_stage}] ` : '')}${escapeHtml(doc.error_message.length > 60 ? doc.error_message.slice(0, 60) + '…' : doc.error_message)}
+               </div>`
+            : '';
+
+          listHtml += `
+            <div class="doc-item ${isSelected ? 'selected' : ''}" data-doc-id="${doc.document_id}" onclick="window.selectDocForChat('${doc.document_id}')">
+              <div class="doc-item-top">
+                <div class="doc-name" title="${escapeHtml(doc.original_filename)}">
+                  📄 ${escapeHtml(doc.original_filename || "Document")}
+                </div>
+                <span class="${badgeClass}">${pulseHtml}${doc.status}</span>
+              </div>
+              <div class="doc-meta">
+                <span title="Full UUID: ${doc.document_id}">ID: <code>${shortId}…</code></span>
+                <span>• ${doc.indexed_chunk_count || 0} chunks</span>
+                ${sizeKb ? `<span>• ${sizeKb}</span>` : ''}
+              </div>
+              ${errorSubtext}
+              <div class="doc-actions" style="margin-top: .4rem;">
+                <button type="button" class="btn-xs btn-filter-trigger ${isSelected ? 'btn-filter-active' : 'btn-secondary'}" onclick="event.stopPropagation(); window.selectDocForChat('${doc.document_id}')">
+                  ${isSelected ? '✓ Active Filter' : 'Filter this doc'}
+                </button>
+                ${doc.status !== "COMPLETED" && !isActive ? `<button type="button" class="btn-xs btn-secondary" onclick="event.stopPropagation(); window.processRagDoc('${doc.document_id}')">▶ Process</button>` : ''}
+                ${isActive ? `<button type="button" class="btn-xs" style="background: #fef08a; border-color: #fde047; color: #854d0e;" onclick="event.stopPropagation(); window.cancelRagDoc('${doc.document_id}')">⏹ Cancel</button>` : ''}
+              </div>
+            </div>
+          `;
+
+          selectOptions += `<option value="${doc.document_id}">${escapeHtml(doc.original_filename || shortId)} (${doc.indexed_chunk_count || 0} chunks)</option>`;
+        });
+
+        listEl.innerHTML = listHtml;
+
+        if (selectEl) {
+          const curVal = selectEl.value;
+          selectEl.innerHTML = selectOptions;
+          selectEl.value = selectedDocId || curVal;
+        }
+
+        if (hasActive && !ragPollInterval) {
+          ragPollInterval = setInterval(fetchRagDocuments, 2000);
+        } else if (!hasActive && ragPollInterval) {
+          clearInterval(ragPollInterval);
+          ragPollInterval = null;
+        }
+      } catch (err) {
+        listEl.innerHTML = `<p style="color: #dc2626; font-size: .85rem;">Error loading documents: ${escapeHtml(err.message)}</p>`;
+      }
+    }
+
+    window.processRagDoc = async function(docId) {
+      status.textContent = `Enqueuing ${docId.slice(0, 8)}…`;
+      try {
+        const res = await fetch(`/rag/documents/${docId}/process`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ force_reprocess: true })
+        });
+        if (!res.ok) throw new Error((await res.json()).detail || "Failed to process");
+        status.textContent = `Processing started for ${docId.slice(0, 8)}`;
+        fetchRagDocuments();
+      } catch (err) {
+        status.textContent = `Error: ${err.message}`;
+      }
+    };
+
+    window.cancelRagDoc = async function(docId) {
+      try {
+        const res = await fetch(`/rag/documents/${docId}/cancel`, { method: "POST" });
+        if (!res.ok) throw new Error((await res.json()).detail || "Failed to cancel");
+        status.textContent = `Processing cancelled for ${docId.slice(0, 8)}`;
+        fetchRagDocuments();
+      } catch (err) {
+        status.textContent = `Error: ${err.message}`;
+      }
+    };
+
+    function initRagTab() {
+      fetchRagDocuments();
+
+      const uploadBtn = panel.querySelector("#rag-upload-btn");
+      const refreshBtn = panel.querySelector("#rag-refresh-btn");
+      const clearBtn = panel.querySelector("#rag-clear-btn");
+      const copyBtn = panel.querySelector("#rag-copy-btn");
+      const selectEl = panel.querySelector("#rag-doc-select");
+
+      if (refreshBtn) refreshBtn.onclick = () => fetchRagDocuments();
+
+      if (selectEl) {
+        selectEl.onchange = () => {
+          selectedDocId = selectEl.value;
+          highlightSelectedDoc();
+        };
+      }
+
+      if (clearBtn) {
+        clearBtn.onclick = () => {
+          const promptEl = panel.querySelector("#prompt");
+          if (promptEl) promptEl.value = "";
+          const ansCard = panel.querySelector("#rag-answer-container");
+          const srcCard = panel.querySelector("#rag-sources-container");
+          const metCard = panel.querySelector("#rag-metrics-card");
+          if (ansCard) ansCard.style.display = "none";
+          if (srcCard) srcCard.style.display = "none";
+          if (metCard) metCard.style.display = "none";
+          status.textContent = "Ready";
+        };
+      }
+
+      if (copyBtn) {
+        copyBtn.onclick = () => {
+          const resultEl = panel.querySelector("#result");
+          if (resultEl && resultEl.textContent) {
+            navigator.clipboard.writeText(resultEl.textContent).then(() => {
+              copyBtn.textContent = "✓ Copied!";
+              setTimeout(() => { copyBtn.textContent = "📋 Copy Answer"; }, 2000);
+            });
+          }
+        };
+      }
+
+      if (uploadBtn) {
+        uploadBtn.onclick = async () => {
+          const fileInput = panel.querySelector("#rag-file");
+          const autoProcess = panel.querySelector("#rag-autoprocess").checked;
+          if (!fileInput.files.length) {
+            alert("Please select a PDF file first.");
+            return;
+          }
+          uploadBtn.disabled = true;
+          status.textContent = "Uploading PDF document...";
+          try {
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+            const res = await fetch(`/rag/documents/upload?auto_process=${autoProcess}`, {
+              method: "POST",
+              body: formData
+            });
+            if (!res.ok) throw new Error((await res.json()).detail || "Upload failed");
+            const data = await res.json();
+            status.textContent = `Uploaded document ${data.document_id.slice(0, 8)}…`;
+            fileInput.value = "";
+            await fetchRagDocuments();
+          } catch (err) {
+            status.textContent = `Upload failed: ${err.message}`;
+          } finally {
+            uploadBtn.disabled = false;
+          }
+        };
+      }
+    }
+
+    async function run() {
+      const q = (key) => panel.querySelector(`#${key}`);
+      const text = q("prompt")?.value ?? "";
+      const button = q("go");
+      button.disabled = true;
+
+      if (selected === 5) {
+        // RAG Chat execution
+        const started = performance.now();
+        const sourcesContainer = q("rag-sources");
+        const sourcesCard = q("rag-sources-container");
+        const answerCard = q("rag-answer-container");
+        const metricsCard = q("rag-metrics-card");
+        const loadingBar = q("rag-loading-bar");
+        const loadingPhase = q("rag-loading-phase");
+        const loadingSub = q("rag-loading-sub");
+        const result = q("result");
+
+        // Hide previous results and show loading state
+        if (answerCard) answerCard.style.display = "none";
+        if (sourcesCard) sourcesCard.style.display = "none";
+        if (metricsCard) metricsCard.style.display = "none";
+        if (loadingBar) loadingBar.style.display = "flex";
+        if (loadingPhase) loadingPhase.textContent = "Searching vector knowledge base...";
+        if (loadingSub) loadingSub.textContent = "Retrieving Top-K evidence chunks via Jina embeddings";
+        status.textContent = "Retrieving context from Qdrant…";
+
+        // Simulated progressive indicator for generation phase
+        const genTimer = setTimeout(() => {
+          if (loadingPhase) loadingPhase.textContent = "Generating grounded answer with TinyLlama...";
+          if (loadingSub) loadingSub.textContent = "Strictly synthesizing answer based on retrieved evidence";
+          status.textContent = "TinyLlama is generating answer…";
+        }, 1200);
+
+        try {
+          const docId = q("rag-doc-select")?.value || null;
+          const topK = parseInt(q("rag-topk")?.value || "3");
+          const threshold = parseFloat(q("rag-threshold")?.value || "0.5");
+
+          const payload = {
+            query: text,
+            top_k: topK,
+            score_threshold: threshold
+          };
+          if (docId) payload.document_id = docId;
+
+          const response = await fetch("/rag/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+
+          if (!response.ok) {
+            const errData = await response.json();
+            throw new Error(errData.detail || response.statusText);
+          }
+
+          const data = await response.json();
+
+          // Render Grounded Answer
+          if (result) result.textContent = data.answer;
+          if (answerCard) answerCard.style.display = "block";
+
+          // Render Metrics Badges
+          const l = data.latency_ms || {};
+          const retrievalMs = l.retrieval_ms != null ? `${Math.round(l.retrieval_ms)} ms` : "--";
+          const generationMs = l.generation_ms != null ? `${Math.round(l.generation_ms)} ms` : "--";
+          const totalMs = l.total_ms != null ? `${(l.total_ms / 1000).toFixed(2)} s` : "--";
+          const srcCount = (data.sources || []).length;
+
+          const mRet = q("metric-retrieval");
+          const mGen = q("metric-generation");
+          const mTot = q("metric-total");
+          const mMod = q("metric-model");
+          const mCnt = q("metric-count");
+
+          if (mRet) mRet.textContent = retrievalMs;
+          if (mGen) mGen.textContent = generationMs;
+          if (mTot) mTot.textContent = totalMs;
+          if (mMod) mMod.textContent = data.model_used ? data.model_used.split("/").pop() : "TinyLlama-1.1B";
+          if (mCnt) mCnt.textContent = `${srcCount} ${srcCount === 1 ? 'source' : 'sources'}`;
+          if (metricsCard) metricsCard.style.display = "flex";
+
+          // Render Sources & Citations
+          if (sourcesContainer) {
+            if (!data.sources || data.sources.length === 0) {
+              sourcesContainer.innerHTML = '<p style="color: #64748b; font-style: italic; font-size: .88rem; margin: 0;">No citations retrieved (similarity below threshold or query rejected by Grounding Gate).</p>';
+            } else {
+              let sourcesHtml = "";
+              data.sources.forEach((s, idx) => {
+                const scorePct = (s.score * 100).toFixed(1);
+                const shortDoc = s.document_id ? s.document_id.slice(0, 8) : "";
+                const shortChunk = s.chunk_id ? s.chunk_id.slice(0, 8) : "";
+                const fullText = s.text || "";
+                const isLong = fullText.length > 220;
+                const excerpt = isLong ? fullText.slice(0, 220) + "…" : fullText;
+
+                sourcesHtml += `
+                  <div class="citation-card">
+                    <div class="citation-header">
+                      <div class="citation-tags">
+                        <span class="tag-index">[#${idx + 1}]</span>
+                        <span class="tag-page">📄 Page ${s.page_number}</span>
+                        <span class="tag-doc" title="Document UUID: ${s.document_id}">Doc: <code>${shortDoc}…</code></span>
+                        ${shortChunk ? `<span class="tag-doc" title="Chunk UUID: ${s.chunk_id}">Chunk: <code>${shortChunk}…</code></span>` : ''}
+                      </div>
+                      <span class="citation-score">Score: ${scorePct}%</span>
+                    </div>
+                    <div class="citation-excerpt" id="cite-excerpt-${idx}">
+                      ${escapeHtml(excerpt)}
+                    </div>
+                    ${isLong ? `
+                      <div class="citation-excerpt" id="cite-full-${idx}" data-len="${fullText.length}" style="display: none; border-left-color: #2563eb; background: #f0fdf4;">
+                        ${escapeHtml(fullText)}
+                      </div>
+                      <button type="button" class="btn-toggle-excerpt" id="cite-btn-${idx}" onclick="window.toggleCitation(${idx})">
+                        Show full chunk (${fullText.length} chars) ▾
+                      </button>
+                    ` : ''}
+                  </div>
+                `;
+              });
+              sourcesContainer.innerHTML = sourcesHtml;
+            }
+          }
+          if (sourcesCard) sourcesCard.style.display = "block";
+
+          status.textContent = `Completed in ${((performance.now() - started) / 1000).toFixed(1)} s`;
+        } catch (error) {
+          status.textContent = `Failed: ${error.message}`;
+          if (result) result.textContent = `Error: ${error.message}`;
+          if (answerCard) answerCard.style.display = "block";
+        } finally {
+          clearTimeout(genTimer);
+          if (loadingBar) loadingBar.style.display = "none";
+          button.disabled = false;
+        }
+        return;
+      }
+
+      // Existing generative models (0 to 4)
+      status.textContent = "Loading model…";
+      const statusPoll = setInterval(async () => {
+        try {
+          const state = await (await fetch("/models/status")).json();
+          const current = state.models?.[state.active_request]?.state;
+          status.textContent = current === "loading" ? "Loading model…" : "Running inference…";
+        } catch (_) { status.textContent = "Running inference…"; }
+      }, 1000);
+      const started = performance.now();
+      try {
+        let response;
+        if (selected === 0) response = await fetch(`/generate/text?${new URLSearchParams({prompt:text,max_new_tokens:q("steps").value,temperature:q("temp").value})}`);
+        if (selected === 1) response = await fetch(`/generate/audio?${new URLSearchParams({prompt:text,preset:q("preset").value})}`);
+        if (selected === 2) response = await fetch(`/generate/image?${new URLSearchParams({prompt:text,num_inference_steps:q("steps").value,seed:q("seed").value})}`);
+        if (selected === 3) {
+          const form = new FormData(); form.append("image", q("file").files[0]);
+          response = await fetch(`/generate/video?num_frames=${q("frames").value}`, {method:"POST",body:form});
+        }
+        if (selected === 4) response = await fetch(`/generate/3d?${new URLSearchParams({prompt:text,num_inference_steps:q("steps").value})}`);
+        if (!response.ok) throw new Error((await response.json()).detail ?? response.statusText);
+        const result = q("result");
+        if (selected === 0) result.textContent = (await response.json()).text;
+        else {
+          objectUrl = URL.createObjectURL(await response.blob());
+          if (selected === 1) { result.src = objectUrl; q("download").href = objectUrl; }
+          if (selected === 2) { result.src = objectUrl; q("download").href = objectUrl; q("download").download = "generated.png"; }
+          if (selected === 3) { result.src = objectUrl; q("download").href = objectUrl; q("download").download = "generated.mp4"; }
+          if (selected === 4) { q("download").href = objectUrl; q("download").download = "generated.obj"; }
+        }
+        status.textContent = `Completed in ${((performance.now()-started)/1000).toFixed(1)} s`;
+      } catch (error) { status.textContent = `Failed: ${error.message}`; }
+      finally { clearInterval(statusPoll); button.disabled = false; }
+    }
+    render();
+  </script>
+</body>
+</html>

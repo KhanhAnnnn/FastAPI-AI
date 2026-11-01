@@ -1,0 +1,256 @@
+{
+  "status": "PASS",
+  "stage": 4,
+  "qdrant_version": "1.19.1",
+  "storage_mode": "local",
+  "local_storage_path": "D:\\FastAPI-AI\\data\\qdrant",
+  "collection_name": "knowledgebase",
+  "vector_dimension": 768,
+  "distance_metric": "Cosine",
+  "model_id": "jinaai/jina-embeddings-v2-base-en",
+  "model_revision": "322d4d7e2f35e84137961a65af894fda0385eb7a",
+  "code_revision": "f3ec4cf7de7e561007f27c9efc7148b0bd713f81",
+  "indexed_documents": [
+    {
+      "document_id": "4b98e1f4-b6ac-4a99-af93-b26a28c67f80",
+      "source": "Phase 3 existing artifact",
+      "chunks": 1,
+      "indexing_latency_seconds": 0.041715299998031696
+    },
+    {
+      "document_id": "0152b766-d862-4fed-b305-5f038eac2d8c",
+      "source": "Bilingual Stage 4 fixture",
+      "chunks": 2,
+      "indexing_latency_seconds": 0.019522200000210432
+    }
+  ],
+  "total_indexed_vectors": 3,
+  "idempotency_verified": true,
+  "persistence_verified": true,
+  "evaluation_metrics": {
+    "positive_queries_count": 4,
+    "recall_at_3": 1.0,
+    "hit_rate_at_3": 1.0,
+    "mrr": 0.875,
+    "retrieval_latency": {
+      "mean_seconds": 0.07591240000086448,
+      "min_seconds": 0.06401650000043446,
+      "max_seconds": 0.08589580000261776
+    }
+  },
+  "queries": [
+    {
+      "query_id": "Q1_EN",
+      "query": "How does token-aware chunking and vector embedding work?",
+      "description": "English query matching Doc 1 chunking/embedding content",
+      "type": "positive",
+      "latency_seconds": 0.07796890000099665,
+      "top_results": [
+        {
+          "rank": 1,
+          "document_id": "0152b766-d862-4fed-b305-5f038eac2d8c",
+          "page_number": 2,
+          "chunk_id": "9575eb9c-1675-5440-bfb0-1783d2e7bec7",
+          "score": 0.8222,
+          "text": "The Jina embedding model operates with 768 dimensions and 8192 context tokens. Token-aware chunking divides source text into overlapping segments preserving provenance."
+        },
+        {
+          "rank": 2,
+          "document_id": "4b98e1f4-b6ac-4a99-af93-b26a28c67f80",
+          "page_number": 1,
+          "chunk_id": "054e9671-d16e-5f11-8acb-a40b97fe3b57",
+          "score": 0.7491,
+          "text": "Phase three acceptance fixture. This controlled English page describes document indexing, page provenance, token-aware chunking, and finite vector embeddings. The fixture is generated for this isolated test and contains no external user data."
+        },
+        {
+          "rank": 3,
+          "document_id": "0152b766-d862-4fed-b305-5f038eac2d8c",
+          "page_number": 1,
+          "chunk_id": "a8cc09b2-30a3-54dc-a221-b21def06c58f",
+          "score": 0.6657,
+          "text": "Kiến trúc hệ thống RAG và cơ sở dữ liệu vector Qdrant. Qdrant hỗ trợ tìm kiếm ngữ nghĩa theo độ đo Cosine với hiệu năng cao."
+        }
+      ],
+      "hit_at_3": true,
+      "reciprocal_rank": 0.5,
+      "hits_above_0_7": 2
+    },
+    {
+      "query_id": "Q2_EN",
+      "query": "What is the context length and embedding dimension of the model?",
+      "description": "English query matching Doc 2 Page 2 model specifications",
+      "type": "positive",
+      "latency_seconds": 0.07475010000052862,
+      "top_results": [
+        {
+          "rank": 1,
+          "document_id": "0152b766-d862-4fed-b305-5f038eac2d8c",
+          "page_number": 2,
+          "chunk_id": "9575eb9c-1675-5440-bfb0-1783d2e7bec7",
+          "score": 0.8562,
+          "text": "The Jina embedding model operates with 768 dimensions and 8192 context tokens. Token-aware chunking divides source text into overlapping segments preserving provenance."
+        },
+        {
+          "rank": 2,
+          "document_id": "4b98e1f4-b6ac-4a99-af93-b26a28c67f80",
+          "page_number": 1,
+          "chunk_id": "054e9671-d16e-5f11-8acb-a40b97fe3b57",
+          "score": 0.68,
+          "text": "Phase three acceptance fixture. This controlled English page describes document indexing, page provenance, token-aware chunking, and finite vector embeddings. The fixture is generated for this isolated test and contains no external user data."
+        },
+        {
+          "rank": 3,
+          "document_id": "0152b766-d862-4fed-b305-5f038eac2d8c",
+          "page_number": 1,
+          "chunk_id": "a8cc09b2-30a3-54dc-a221-b21def06c58f",
+          "score": 0.6524,
+          "text": "Kiến trúc hệ thống RAG và cơ sở dữ liệu vector Qdrant. Qdrant hỗ trợ tìm kiếm ngữ nghĩa theo độ đo Cosine với hiệu năng cao."
+        }
+      ],
+      "hit_at_3": true,
+      "reciprocal_rank": 1.0,
+      "hits_above_0_7": 1
+    },
+    {
+      "query_id": "Q3_VI",
+      "query": "Cơ sở dữ liệu vector Qdrant tìm kiếm theo độ đo nào?",
+      "description": "Vietnamese query matching Doc 2 Page 1 Qdrant Cosine metric",
+      "type": "positive",
+      "latency_seconds": 0.08518410000033327,
+      "top_results": [
+        {
+          "rank": 1,
+          "document_id": "0152b766-d862-4fed-b305-5f038eac2d8c",
+          "page_number": 1,
+          "chunk_id": "a8cc09b2-30a3-54dc-a221-b21def06c58f",
+          "score": 0.94,
+          "text": "Kiến trúc hệ thống RAG và cơ sở dữ liệu vector Qdrant. Qdrant hỗ trợ tìm kiếm ngữ nghĩa theo độ đo Cosine với hiệu năng cao."
+        },
+        {
+          "rank": 2,
+          "document_id": "4b98e1f4-b6ac-4a99-af93-b26a28c67f80",
+          "page_number": 1,
+          "chunk_id": "054e9671-d16e-5f11-8acb-a40b97fe3b57",
+          "score": 0.7079,
+          "text": "Phase three acceptance fixture. This controlled English page describes document indexing, page provenance, token-aware chunking, and finite vector embeddings. The fixture is generated for this isolated test and contains no external user data."
+        },
+        {
+          "rank": 3,
+          "document_id": "0152b766-d862-4fed-b305-5f038eac2d8c",
+          "page_number": 2,
+          "chunk_id": "9575eb9c-1675-5440-bfb0-1783d2e7bec7",
+          "score": 0.7054,
+          "text": "The Jina embedding model operates with 768 dimensions and 8192 context tokens. Token-aware chunking divides source text into overlapping segments preserving provenance."
+        }
+      ],
+      "hit_at_3": true,
+      "reciprocal_rank": 1.0,
+      "hits_above_0_7": 3
+    },
+    {
+      "query_id": "Q4_VI",
+      "query": "Mô hình Jina embedding có bao nhiêu chiều và bao nhiêu token ngữ cảnh?",
+      "description": "Vietnamese query matching Doc 2 Page 2 dimensions/context",
+      "type": "positive",
+      "latency_seconds": 0.08589580000261776,
+      "top_results": [
+        {
+          "rank": 1,
+          "document_id": "0152b766-d862-4fed-b305-5f038eac2d8c",
+          "page_number": 2,
+          "chunk_id": "9575eb9c-1675-5440-bfb0-1783d2e7bec7",
+          "score": 0.838,
+          "text": "The Jina embedding model operates with 768 dimensions and 8192 context tokens. Token-aware chunking divides source text into overlapping segments preserving provenance."
+        },
+        {
+          "rank": 2,
+          "document_id": "0152b766-d862-4fed-b305-5f038eac2d8c",
+          "page_number": 1,
+          "chunk_id": "a8cc09b2-30a3-54dc-a221-b21def06c58f",
+          "score": 0.8356,
+          "text": "Kiến trúc hệ thống RAG và cơ sở dữ liệu vector Qdrant. Qdrant hỗ trợ tìm kiếm ngữ nghĩa theo độ đo Cosine với hiệu năng cao."
+        },
+        {
+          "rank": 3,
+          "document_id": "4b98e1f4-b6ac-4a99-af93-b26a28c67f80",
+          "page_number": 1,
+          "chunk_id": "054e9671-d16e-5f11-8acb-a40b97fe3b57",
+          "score": 0.7715,
+          "text": "Phase three acceptance fixture. This controlled English page describes document indexing, page provenance, token-aware chunking, and finite vector embeddings. The fixture is generated for this isolated test and contains no external user data."
+        }
+      ],
+      "hit_at_3": true,
+      "reciprocal_rank": 1.0,
+      "hits_above_0_7": 3
+    },
+    {
+      "query_id": "Q5_NEG",
+      "query": "Quantum computing Shor algorithm for integer factorization and discrete logarithms",
+      "description": "Unrelated negative query with no matching content",
+      "type": "negative",
+      "latency_seconds": 0.06401650000043446,
+      "top_results": [
+        {
+          "rank": 1,
+          "document_id": "0152b766-d862-4fed-b305-5f038eac2d8c",
+          "page_number": 2,
+          "chunk_id": "9575eb9c-1675-5440-bfb0-1783d2e7bec7",
+          "score": 0.6613,
+          "text": "The Jina embedding model operates with 768 dimensions and 8192 context tokens. Token-aware chunking divides source text into overlapping segments preserving provenance."
+        },
+        {
+          "rank": 2,
+          "document_id": "4b98e1f4-b6ac-4a99-af93-b26a28c67f80",
+          "page_number": 1,
+          "chunk_id": "054e9671-d16e-5f11-8acb-a40b97fe3b57",
+          "score": 0.6534,
+          "text": "Phase three acceptance fixture. This controlled English page describes document indexing, page provenance, token-aware chunking, and finite vector embeddings. The fixture is generated for this isolated test and contains no external user data."
+        },
+        {
+          "rank": 3,
+          "document_id": "0152b766-d862-4fed-b305-5f038eac2d8c",
+          "page_number": 1,
+          "chunk_id": "a8cc09b2-30a3-54dc-a221-b21def06c58f",
+          "score": 0.582,
+          "text": "Kiến trúc hệ thống RAG và cơ sở dữ liệu vector Qdrant. Qdrant hỗ trợ tìm kiếm ngữ nghĩa theo độ đo Cosine với hiệu năng cao."
+        }
+      ],
+      "hit_at_3": null,
+      "reciprocal_rank": null,
+      "hits_above_0_7": 0
+    },
+    {
+      "query_id": "Q6_FILTER",
+      "query": "token-aware chunking and finite vector embeddings",
+      "description": "Document filter isolation test: Doc 1 content queried with Doc 2 filter",
+      "type": "filtered",
+      "latency_seconds": 0.06765900000027614,
+      "top_results": [
+        {
+          "rank": 1,
+          "document_id": "0152b766-d862-4fed-b305-5f038eac2d8c",
+          "page_number": 2,
+          "chunk_id": "9575eb9c-1675-5440-bfb0-1783d2e7bec7",
+          "score": 0.7971,
+          "text": "The Jina embedding model operates with 768 dimensions and 8192 context tokens. Token-aware chunking divides source text into overlapping segments preserving provenance."
+        },
+        {
+          "rank": 2,
+          "document_id": "0152b766-d862-4fed-b305-5f038eac2d8c",
+          "page_number": 1,
+          "chunk_id": "a8cc09b2-30a3-54dc-a221-b21def06c58f",
+          "score": 0.6399,
+          "text": "Kiến trúc hệ thống RAG và cơ sở dữ liệu vector Qdrant. Qdrant hỗ trợ tìm kiếm ngữ nghĩa theo độ đo Cosine với hiệu năng cao."
+        }
+      ],
+      "hit_at_3": null,
+      "reciprocal_rank": null,
+      "hits_above_0_7": 1
+    }
+  ],
+  "memory_usage": {
+    "rss_start_bytes": 505421824,
+    "rss_end_bytes": 4428984320,
+    "rss_delta_mb": 3741.8
+  }
+}

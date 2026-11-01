@@ -1,0 +1,2 @@
+class ModelBusyError(RuntimeError):
+    pass

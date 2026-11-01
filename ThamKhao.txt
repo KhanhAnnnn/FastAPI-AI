@@ -1,0 +1,388 @@
+### 1\. Mô hình ngôn ngữ (Language Model - TinyLlama)
+
+Mô hình được sử dụng là **TinyLlama-1.1B-Chat** qua thư viện `transformers`[1][2].
+
+* **Nạp mô hình và hàm sinh văn bản (** **models.py** **)**[1][2]:
+
+```
+# models.py 
+import torch 
+from transformers import Pipeline, pipeline 
+
+prompt = "How to set up a FastAPI project?" 
+system_prompt = """ Your name is FastAPI bot and you are a helpful chatbot responsible for teaching FastAPI to your users. Always respond in markdown. """ 
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
+
+def load_text_model():     
+    pipe = pipeline(         
+        "text-generation", 
+        model="TinyLlama/TinyLlama-1.1B-Chat-v1.0",         
+        torch_dtype=torch.bfloat16,         
+        device=device     
+    )     
+    return pipe 
+
+def generate_text(pipe: Pipeline, prompt: str, temperature: float = 0.7) -&gt; str:     
+    messages = [         
+        {"role": "system", "content": system_prompt},         
+        {"role": "user", "content": prompt},     
+    ]     
+    prompt = pipe.tokenizer.apply_chat_template(         
+        messages, tokenize=False, add_generation_prompt=True     
+    )     
+    predictions = pipe(         
+        prompt,         
+        temperature=temperature,         
+        max_new_tokens=256,         
+        do_sample=True,         
+        top_k=50,         
+        top_p=0.95,     
+    )     
+    output = predictions["generated_text"].split("\n&lt;|assistant|&gt;\n")[-1]     
+    return output
+```
+* **Tạo Endpoint FastAPI phục vụ mô hình (** **main.py** **)**[3]:
+
+```
+# main.py 
+from fastapi import FastAPI 
+from models import load_text_model, generate_text 
+
+app = FastAPI() 
+
+@app.get("/generate/text") 
+def serve_language_model_controller(prompt: str) -&gt; str:     
+    pipe = load_text_model()     
+    output = generate_text(pipe, prompt)     
+    return output
+
+```
+
+---
+
+### 2\. Mô hình âm thanh (Audio Model - Bark)
+
+Mô hình Text-to-Speech được sử dụng là **Suno Bark (bark-small)**[4][5].
+
+* **Khai báo Schema và hàm tải/sinh âm thanh (** **schemas.py** **&amp;** **models.py** **)**[5]:
+
+```
+# schemas.py 
+from typing import Literal 
+VoicePresets = Literal["v2/en_speaker_1", "v2/en_speaker_9"] 
+
+# models.py 
+import torch 
+import numpy as np 
+from transformers import AutoProcessor, AutoModel, BarkProcessor, BarkModel 
+from schemas import VoicePresets 
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
+
+def load_audio_model() -&gt; tuple[BarkProcessor, BarkModel]:     
+    processor = AutoProcessor.from_pretrained("suno/bark-small", device=device)     
+    model = AutoModel.from_pretrained("suno/bark-small", device=device)     
+    return processor, model 
+
+def generate_audio(     
+    processor: BarkProcessor,     
+    model: BarkModel,     
+    prompt: str,     
+    preset: VoicePresets, 
+) -&gt; tuple[np.array, int]:     
+    inputs = processor(text=[prompt], return_tensors="pt", voice_preset=preset)     
+    output = model.generate(**inputs, do_sample=True).cpu().numpy().squeeze()     
+    sample_rate = model.generation_config.sample_rate     
+    return output, sample_rate
+
+```
+
+* **Chuyển đổi dữ liệu âm thanh sang Buffer và trả về StreamingResponse (** **utils.py** **&amp;** **main.py** **)**[6][7]:
+
+```
+# utils.py 
+from io import BytesIO 
+import soundfile 
+import numpy as np 
+
+def audio_array_to_buffer(audio_array: np.array, sample_rate: int) -&gt; BytesIO:     
+    buffer = BytesIO()     
+    soundfile.write(buffer, audio_array, sample_rate, format="wav")     
+    buffer.seek(0)     
+    return buffer 
+
+# main.py 
+from fastapi import FastAPI, status 
+from fastapi.responses import StreamingResponse 
+from models import load_audio_model, generate_audio 
+from schemas import VoicePresets 
+from utils import audio_array_to_buffer 
+
+@app.get(     
+    "/generate/audio",     
+    responses={status.HTTP_200_OK: {"content": {"audio/wav": {}}}},     
+    response_class=StreamingResponse, 
+) 
+def serve_text_to_audio_model_controller(     
+    prompt: str,     
+    preset: VoicePresets = "v2/en_speaker_1", 
+):     
+    processor, model = load_audio_model()     
+    output, sample_rate = generate_audio(processor, model, prompt, preset)     
+    return StreamingResponse(         
+        audio_array_to_buffer(output, sample_rate), media_type="audio/wav"     
+    )
+
+```
+
+---
+
+### 3\. Mô hình thị giác (Vision Model - TinySD)
+
+Mô hình Text-to-Image được sử dụng là **TinySD (** **segmind/tiny-sd** **)** dựa trên Stable Diffusion[8].
+
+* **Nạp mô hình và hàm sinh hình ảnh (** **models.py** **)**[8]:
+
+```
+# models.py 
+import torch 
+from diffusers import DiffusionPipeline, StableDiffusionInpaintPipelineLegacy 
+from PIL import Image 
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
+
+def load_image_model() -&gt; StableDiffusionInpaintPipelineLegacy:     
+    pipe = DiffusionPipeline.from_pretrained(         
+        "segmind/tiny-sd", torch_dtype=torch.float32, device=device     
+    )     
+    return pipe 
+
+def generate_image(     
+    pipe: StableDiffusionInpaintPipelineLegacy, prompt: str 
+) -&gt; Image.Image:     
+    output = pipe(prompt, num_inference_steps=10).images     
+    return output
+
+```
+
+* **Chuyển hình ảnh sang Bytes và trả về Response dạng Image PNG (** **utils.py** **&amp;** **main.py** **)**[9]:
+
+```
+# utils.py 
+from typing import Literal 
+from PIL import Image 
+from io import BytesIO 
+
+def img_to_bytes(     
+    image: Image.Image, img_format: Literal["PNG", "JPEG"] = "PNG" 
+) -&gt; bytes:     
+    buffer = BytesIO()     
+    image.save(buffer, format=img_format)     
+    return buffer.getvalue() 
+
+# main.py 
+from fastapi import FastAPI, Response, status 
+from models import load_image_model, generate_image 
+from utils import img_to_bytes 
+
+@app.get("/generate/image",          
+         responses={status.HTTP_200_OK: {"content": {"image/png": {}}}},          
+         response_class=Response) 
+def serve_text_to_image_model_controller(prompt: str):     
+    pipe = load_image_model()     
+    output = generate_image(pipe, prompt)     
+    return Response(content=img_to_bytes(output), media_type="image/png")
+
+```
+
+---
+
+### 4\. Mô hình video (Video Model - Stable Video Diffusion)
+
+Mô hình Image-to-Video sử dụng là **stabilityai/stable-video-diffusion-img2vid**[10][11].
+
+* **Nạp mô hình và tạo khung hình video (** **models.py** **)**[11]:
+
+```
+# models.py 
+import torch 
+from diffusers import StableVideoDiffusionPipeline 
+from PIL import Image 
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
+
+def load_video_model() -&gt; StableVideoDiffusionPipeline:     
+    pipe = StableVideoDiffusionPipeline.from_pretrained(         
+        "stabilityai/stable-video-diffusion-img2vid",         
+        torch_dtype=torch.float16,         
+        variant="fp16",         
+        device=device,     
+    )     
+    return pipe 
+
+def generate_video(     
+    pipe: StableVideoDiffusionPipeline, image: Image.Image, num_frames: int = 25 
+) -&gt; list[Image.Image]:     
+    image = image.resize((1024, 576))     
+    generator = torch.manual_seed(42)     
+    frames = pipe(         
+        image, decode_chunk_size=8, generator=generator, num_frames=num_frames     
+    ).frames     
+    return frames
+
+```
+
+* **Xuất chuỗi khung hình ra Buffer định dạng MP4 bằng thư viện** **av** **(** **utils.py** **)**[12]:
+
+```
+# utils.py 
+from io import BytesIO 
+from PIL import Image 
+import av 
+
+def export_to_video_buffer(images: list[Image.Image]) -&gt; BytesIO:     
+    buffer = BytesIO()     
+    output = av.open(buffer, "w", format="mp4")     
+    stream = output.add_stream("h264", 30)     
+    stream.width = images.width     
+    stream.height = images.height     
+    stream.pix_fmt = "yuv444p"     
+    stream.options = {"crf": "17"}     
+    for image in images:         
+        frame = av.VideoFrame.from_image(image)         
+        packet = stream.encode(frame)         
+        output.mux(packet)     
+    packet = stream.encode(None)     
+    output.mux(packet)     
+    return buffer
+
+```
+
+* **Tạo Endpoint nhận file hình ảnh và stream video MP4 (** **main.py** **)**[13]:
+
+```
+# main.py 
+from fastapi import status, FastAPI, File 
+from fastapi.responses import StreamingResponse 
+from io import BytesIO 
+from PIL import Image 
+
+from models import load_video_model, generate_video 
+from utils import export_to_video_buffer 
+
+@app.post(     
+    "/generate/video",     
+    responses={status.HTTP_200_OK: {"content": {"video/mp4": {}}}},     
+    response_class=StreamingResponse, 
+) 
+def serve_image_to_video_model_controller(     
+    image: bytes = File(...), num_frames: int = 25 
+):     
+    image = Image.open(BytesIO(image))     
+    model = load_video_model()     
+    frames = generate_video(model, image, num_frames)     
+    return StreamingResponse(         
+        export_to_video_buffer(frames), media_type="video/mp4"     
+    )
+
+```
+
+---
+
+### 5\. Mô hình 3D (3D Model - OpenAI Shap-E)
+
+Mô hình Text-to-3D sử dụng là **OpenAI Shap-E (** **openai/shap-e** **)** để tạo lưới hình học (mesh)[14][15].
+
+* **Nạp mô hình Shap-E và sinh lưới 3D (** **models.py** **)**[15][16]:
+
+```
+# models.py 
+import torch 
+from diffusers import ShapEPipeline 
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
+
+def load_3d_model() -&gt; ShapEPipeline:     
+    pipe = ShapEPipeline.from_pretrained("openai/shap-e", device=device)     
+    return pipe 
+
+def generate_3d_geometry(     
+    pipe: ShapEPipeline, prompt: str, num_inference_steps: int = 25 
+):     
+    images = pipe(         
+        prompt,         
+        guidance_scale=15.0,         
+        num_inference_steps=num_inference_steps,         
+        output_type="mesh",     
+    ).images     
+    return images
+
+```
+
+* **Chuyển đổi Mesh tensor sang Buffer định dạng Wavefront OBJ dùng** **open3d** **(** **utils.py** **)**[17]:
+
+```
+# utils.py 
+import os 
+import tempfile 
+from io import BytesIO 
+from pathlib import Path 
+import open3d as o3d 
+import torch 
+from diffusers.pipelines.shap_e.renderer import MeshDecoderOutput 
+
+def mesh_to_obj_buffer(mesh: MeshDecoderOutput) -&gt; BytesIO:     
+    mesh_o3d = o3d.geometry.TriangleMesh()     
+    mesh_o3d.vertices = o3d.utility.Vector3dVector(         
+        mesh.verts.cpu().detach().numpy()     
+    )     
+    mesh_o3d.triangles = o3d.utility.Vector3iVector(         
+        mesh.faces.cpu().detach().numpy()     
+    ) 
+
+    if len(mesh.vertex_channels) == 3:  # Có kênh màu RGB        
+        vert_color = torch.stack(             
+            [mesh.vertex_channels[channel] for channel in "RGB"], dim=1         
+        )         
+        mesh_o3d.vertex_colors = o3d.utility.Vector3dVector(             
+            vert_color.cpu().detach().numpy()         
+        ) 
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".obj") as tmp:         
+        o3d.io.write_triangle_mesh(tmp.name, mesh_o3d, write_ascii=True)         
+        with open(tmp.name, "rb") as f:             
+            buffer = BytesIO(f.read())         
+        os.remove(tmp.name) 
+
+    return buffer
+
+```
+
+* **Tạo Endpoint tải file OBJ về máy (** **main.py** **)**[18]:
+
+```
+# main.py 
+from fastapi import FastAPI, status 
+from fastapi.responses import StreamingResponse 
+from models import load_3d_model, generate_3d_geometry 
+from utils import mesh_to_obj_buffer 
+
+@app.get(     
+    "/generate/3d",     
+    responses={status.HTTP_200_OK: {"content": {"model/obj": {}}}},     
+    response_class=StreamingResponse, 
+) 
+def serve_text_to_3d_model_controller(     
+    prompt: str, num_inference_steps: int = 25 
+):     
+    model = load_3d_model()     
+    mesh = generate_3d_geometry(model, prompt, num_inference_steps)     
+    response = StreamingResponse(         
+        mesh_to_obj_buffer(mesh), media_type="model/obj"     
+    )     
+    response.headers["Content-Disposition"] = (         
+        f"attachment; filename={prompt}.obj"     
+    )     
+    return response
+```

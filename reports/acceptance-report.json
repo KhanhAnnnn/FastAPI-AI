@@ -1,0 +1,300 @@
+{
+  "created_at": "2026-10-09T18:51:02.198641+00:00",
+  "environment": {
+    "python": "3.13.2",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "cpu_fallback_enabled": false,
+    "cache_directory": "D:\\FastAPI-AI\\.cache\\huggingface",
+    "packages": {
+      "torch": "2.7.1+cu126",
+      "transformers": "4.57.3",
+      "diffusers": "0.35.2",
+      "fastapi": "0.135.1"
+    },
+    "torch_cuda_runtime": "12.6",
+    "cuda_available": true,
+    "gpu": {
+      "name": "Quadro P4000",
+      "compute_capability": "6.1",
+      "architecture": "sm_61",
+      "total_memory_bytes": 8589803520,
+      "compiled_architectures": [
+        "sm_50",
+        "sm_60",
+        "sm_61",
+        "sm_70",
+        "sm_75",
+        "sm_80",
+        "sm_86",
+        "sm_90"
+      ]
+    },
+    "nvidia_smi": "Quadro P4000, 572.76, 8192, 2654, 0"
+  },
+  "models": {
+    "TinyLlama": {
+      "output": "non-empty assistant text from two requests",
+      "first_request_seconds": 2288.04,
+      "warm_request_seconds": 13.346,
+      "output_files": [
+        "D:\\FastAPI-AI\\outputs\\text\\72e3beaf36f24734b4b0e12caf91dc74.json",
+        "D:\\FastAPI-AI\\outputs\\text\\ea9123f12a5a4f45a14fc7ade6a76b20.json"
+      ],
+      "checkpoint": {
+        "path": "D:\\FastAPI-AI\\.cache\\huggingface\\models--TinyLlama--TinyLlama-1.1B-Chat-v1.0\\snapshots\\fe8a4ea1ffedaf415f4da2f062534de366a451e6\\model.safetensors",
+        "size_bytes": 2200119864,
+        "sha256": "6e6001da2106d4757498752a021df6c2bdc332c650aae4bae6b0c004dcf14933",
+        "sha256_matches_cache_blob": true
+      },
+      "content_quality_note": "The first response incorrectly described FastAPI as Flask-based; this acceptance verifies real inference and artifact validity, not factual accuracy.",
+      "metrics": {
+        "model": "text",
+        "model_id": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+        "device": "cuda",
+        "load_seconds": 2272.130606099963,
+        "inference_seconds": 13.46789460000582,
+        "total_seconds": 2285.5985026999842,
+        "process_rss_before_bytes": 464060416,
+        "process_rss_after_bytes": 1921736704,
+        "process_cpu_seconds": 128.046875,
+        "vram_before_bytes": 2202194432,
+        "vram_after_bytes": 2210714112,
+        "peak_vram_bytes": 2219912704,
+        "gpu_utilization_percent": null,
+        "peak_vram_measurement": "torch.cuda.max_memory_allocated"
+      },
+      "warm_metrics": {
+        "model": "text",
+        "model_id": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+        "device": "cuda",
+        "load_seconds": 0.0,
+        "inference_seconds": 13.341825500014238,
+        "total_seconds": 13.341826600022614,
+        "process_rss_before_bytes": 1921875968,
+        "process_rss_after_bytes": 1921978368,
+        "process_cpu_seconds": 12.15625,
+        "vram_before_bytes": 2210714112,
+        "vram_after_bytes": 2210714112,
+        "peak_vram_bytes": 2219912704,
+        "gpu_utilization_percent": null,
+        "peak_vram_measurement": "torch.cuda.max_memory_allocated"
+      },
+      "status": "PASS",
+      "test_seconds": 2301.387
+    },
+    "Bark": {
+      "output_files": [
+        "D:\\FastAPI-AI\\outputs\\audio\\36dc70a2b60e4d93bb5d2af90dfe809e.wav",
+        "D:\\FastAPI-AI\\outputs\\audio\\1bba003277e0446db03cea96ace5a57e.wav"
+      ],
+      "checkpoint": {
+        "path": "D:\\FastAPI-AI\\.cache\\huggingface\\models--suno--bark-small\\snapshots\\1dbd7a128513b8ae4a4e2130fed57b7ac9da5bcd\\pytorch_model.bin",
+        "size_bytes": 1676663913,
+        "sha256": "f0f7f16b24f65789ce42b3c491aa6a1cdf219f7ef425066fcd194485245e65d9",
+        "sha256_matches_cache_blob": true
+      },
+      "output_bytes": 224044,
+      "sample_rate": 24000,
+      "duration_seconds": 4.666666666666667,
+      "device": "cuda",
+      "load_seconds": "11.338",
+      "inference_seconds": "17.141",
+      "peak_vram_bytes": "984007168",
+      "first_request_seconds": 31.38,
+      "warm_request_seconds": 6.888,
+      "warm_output_bytes": 77484,
+      "warm_sample_rate": 24000,
+      "warm_duration_seconds": 1.6133333333333333,
+      "warm_metrics": {
+        "device": "cuda",
+        "load_seconds": 0.0,
+        "inference_seconds": 6.821,
+        "peak_vram_bytes": 984001536
+      },
+      "status": "PASS",
+      "test_seconds": 38.27,
+      "prior_successful_run": {
+        "output_files": [
+          "D:\\FastAPI-AI\\outputs\\audio\\80caff2c1b4241d5894e9c5d3a2b0392.wav"
+        ],
+        "output_bytes": 210604,
+        "sample_rate": 24000,
+        "duration_seconds": 4.386666666666667,
+        "device": "cuda",
+        "load_seconds": "857.262",
+        "inference_seconds": "847.411",
+        "peak_vram_bytes": "984006656",
+        "status": "PASS",
+        "test_seconds": 1708.557
+      },
+      "prior_attempt": {
+        "status": "BLOCKED",
+        "error": "OfflineModeIsEnabled: Cannot reach https://huggingface.co/api/models/suno/bark-small: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable.",
+        "test_seconds": 7.868,
+        "traceback": "Traceback (most recent call last):\n  File \"D:\\FastAPI-AI\\scripts\\run_inference_acceptance.py\", line 99, in run_check\n    result = check()\n  File \"D:\\FastAPI-AI\\scripts\\run_inference_acceptance.py\", line 50, in <lambda>\n    selected, \"Bark\", lambda: check_audio(client), previous_models\n                              ~~~~~~~~~~~^^^^^^^^\n  File \"D:\\FastAPI-AI\\scripts\\run_inference_acceptance.py\", line 180, in check_audio\n    response = client.get(\n        \"/generate/audio\",\n    ...<3 lines>...\n        },\n    )\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\httpx\\_client.py\", line 1053, in get\n    return self.request(\n           ~~~~~~~~~~~~^\n        \"GET\",\n        ^^^^^^\n    ...<7 lines>...\n        extensions=extensions,\n        ^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\starlette\\testclient.py\", line 463, in request\n    return super().request(\n           ~~~~~~~~~~~~~~~^\n        method,\n        ^^^^^^^\n    ...<11 lines>...\n        extensions=extensions,\n        ^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\httpx\\_client.py\", line 825, in request\n    return self.send(request, auth=auth, follow_redirects=follow_redirects)\n           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\httpx\\_client.py\", line 914, in send\n    response = self._send_handling_auth(\n        request,\n    ...<2 lines>...\n        history=[],\n    )\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\httpx\\_client.py\", line 942, in _send_handling_auth\n    response = self._send_handling_redirects(\n        request,\n        follow_redirects=follow_redirects,\n        history=history,\n    )\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\httpx\\_client.py\", line 979, in _send_handling_redirects\n    response = self._send_single_request(request)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\httpx\\_client.py\", line 1014, in _send_single_request\n    response = transport.handle_request(request)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\starlette\\testclient.py\", line 360, in handle_request\n    raise exc\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\starlette\\testclient.py\", line 357, in handle_request\n    portal.call(self.app, scope, receive, send)\n    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\anyio\\from_thread.py\", line 340, in call\n    return cast(T_Retval, self.start_task_soon(func, *args).result())\n                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"D:\\Lib\\concurrent\\futures\\_base.py\", line 456, in result\n    return self.__get_result()\n           ~~~~~~~~~~~~~~~~~^^\n  File \"D:\\Lib\\concurrent\\futures\\_base.py\", line 401, in __get_result\n    raise self._exception\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\anyio\\from_thread.py\", line 265, in _call_func\n    retval = await retval_or_awaitable\n             ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\fastapi\\applications.py\", line 1160, in __call__\n    await super().__call__(scope, receive, send)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\starlette\\applications.py\", line 96, in __call__\n    await self.middleware_stack(scope, receive, send)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\starlette\\middleware\\errors.py\", line 186, in __call__\n    raise exc\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\starlette\\middleware\\errors.py\", line 164, in __call__\n    await self.app(scope, receive, _send)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\starlette\\middleware\\exceptions.py\", line 63, in __call__\n    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\starlette\\_exception_handler.py\", line 53, in wrapped_app\n    raise exc\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\starlette\\_exception_handler.py\", line 42, in wrapped_app\n    await app(scope, receive, sender)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\fastapi\\middleware\\asyncexitstack.py\", line 18, in __call__\n    await self.app(scope, receive, send)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\starlette\\routing.py\", line 676, in __call__\n    await self.middleware_stack(scope, receive, send)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\starlette\\routing.py\", line 697, in app\n    await route.handle(scope, receive, send)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\starlette\\routing.py\", line 282, in handle\n    await self.app(scope, receive, send)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\fastapi\\routing.py\", line 130, in app\n    await wrap_app_handling_exceptions(app, request)(scope, receive, send)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\starlette\\_exception_handler.py\", line 53, in wrapped_app\n    raise exc\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\starlette\\_exception_handler.py\", line 42, in wrapped_app\n    await app(scope, receive, sender)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\fastapi\\routing.py\", line 116, in app\n    response = await f(request)\n               ^^^^^^^^^^^^^^^^\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\fastapi\\routing.py\", line 670, in app\n    raw_response = await run_endpoint_function(\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<3 lines>...\n    )\n    ^\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\fastapi\\routing.py\", line 324, in run_endpoint_function\n    return await dependant.call(**values)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\FastAPI-AI\\app\\audio\\router.py\", line 30, in generate_audio\n    (waveform, sample_rate), metrics = await model_manager.run(\n                                       ^^^^^^^^^^^^^^^^^^^^^^^^\n        \"audio\", load_model, lambda model: generate(model, prompt, preset)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"D:\\FastAPI-AI\\app\\core\\model_manager.py\", line 45, in run\n    return await asyncio.to_thread(self._run_sync, name, loader, operation)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\Lib\\asyncio\\threads.py\", line 25, in to_thread\n    return await loop.run_in_executor(None, func_call)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\Lib\\concurrent\\futures\\thread.py\", line 59, in run\n    result = self.fn(*self.args, **self.kwargs)\n  File \"D:\\FastAPI-AI\\app\\core\\model_manager.py\", line 74, in _run_sync\n    model = loader()\n  File \"D:\\FastAPI-AI\\app\\audio\\models.py\", line 16, in load_model\n    processor = AutoProcessor.from_pretrained(MODEL_ID, cache_dir=CACHE_ROOT)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\transformers\\models\\auto\\processing_auto.py\", line 396, in from_pretrained\n    return processor_class.from_pretrained(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        pretrained_model_name_or_path, trust_remote_code=trust_remote_code, **kwargs\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\transformers\\models\\bark\\processing_bark.py\", line 121, in from_pretrained\n    tokenizer = AutoTokenizer.from_pretrained(pretrained_processor_name_or_path, **kwargs)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\transformers\\models\\auto\\tokenization_auto.py\", line 1156, in from_pretrained\n    return tokenizer_class.from_pretrained(pretrained_model_name_or_path, *inputs, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\transformers\\tokenization_utils_base.py\", line 2113, in from_pretrained\n    return cls._from_pretrained(\n           ~~~~~~~~~~~~~~~~~~~~^\n        resolved_vocab_files,\n        ^^^^^^^^^^^^^^^^^^^^^\n    ...<9 lines>...\n        **kwargs,\n        ^^^^^^^^^\n    )\n    ^\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\transformers\\tokenization_utils_base.py\", line 2395, in _from_pretrained\n    tokenizer = cls._patch_mistral_regex(\n        tokenizer,\n    ...<7 lines>...\n        fix_mistral_regex=kwargs.get(\"fix_mistral_regex\"),\n    )\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\transformers\\tokenization_utils_base.py\", line 2438, in _patch_mistral_regex\n    if _is_local or is_base_mistral(pretrained_model_name_or_path):\n                    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\transformers\\tokenization_utils_base.py\", line 2432, in is_base_mistral\n    model = model_info(model_id)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\huggingface_hub\\utils\\_validators.py\", line 114, in _inner_fn\n    return fn(*args, **kwargs)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\huggingface_hub\\hf_api.py\", line 2660, in model_info\n    r = get_session().get(path, headers=headers, timeout=timeout, params=params)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\requests\\sessions.py\", line 671, in get\n    return self.request(\"GET\", url, params=params, **kwargs)\n           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\requests\\sessions.py\", line 651, in request\n    resp = self.send(prep, **send_kwargs)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\requests\\sessions.py\", line 784, in send\n    r = adapter.send(request, **kwargs)\n  File \"D:\\FastAPI-AI\\.venv-genai\\Lib\\site-packages\\huggingface_hub\\utils\\_http.py\", line 106, in send\n    raise OfflineModeIsEnabled(\n        f\"Cannot reach {request.url}: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable.\"\n    )\nhuggingface_hub.errors.OfflineModeIsEnabled: Cannot reach https://huggingface.co/api/models/suno/bark-small: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable.\n"
+      }
+    },
+    "TinySD": {
+      "output_files": [
+        "D:\\FastAPI-AI\\outputs\\images\\114a0fbf95844197a8472d461dd881ea.png",
+        "D:\\FastAPI-AI\\outputs\\images\\e675957a371143b5b13be99d67ea7798.png"
+      ],
+      "output_bytes": 412473,
+      "format": "PNG",
+      "dimensions": [
+        512,
+        512
+      ],
+      "checkpoint": {
+        "model_id": "segmind/tiny-sd",
+        "snapshot_path": "D:\\FastAPI-AI\\.cache\\huggingface\\models--segmind--tiny-sd\\snapshots\\cad0bd7495fa6c4bcca01b19a723dc91627fe84f",
+        "weights_loaded": [
+          {
+            "path": "D:\\FastAPI-AI\\.cache\\huggingface\\models--segmind--tiny-sd\\snapshots\\cad0bd7495fa6c4bcca01b19a723dc91627fe84f\\text_encoder\\pytorch_model.bin",
+            "size_bytes": 246187869
+          },
+          {
+            "path": "D:\\FastAPI-AI\\.cache\\huggingface\\models--segmind--tiny-sd\\snapshots\\cad0bd7495fa6c4bcca01b19a723dc91627fe84f\\unet\\diffusion_pytorch_model.bin",
+            "size_bytes": 646923637
+          },
+          {
+            "path": "D:\\FastAPI-AI\\.cache\\huggingface\\models--segmind--tiny-sd\\snapshots\\cad0bd7495fa6c4bcca01b19a723dc91627fe84f\\vae\\diffusion_pytorch_model.bin",
+            "size_bytes": 167407857
+          }
+        ],
+        "total_weight_bytes": 1060519363,
+        "loaded_by_real_inference": true
+      },
+      "device": "cuda",
+      "load_seconds": "374.254",
+      "inference_seconds": "5.931",
+      "peak_vram_bytes": "2007410176",
+      "first_request_seconds": 382.8,
+      "warm_request_seconds": 4.318,
+      "warm_output_bytes": 412473,
+      "warm_dimensions": [
+        512,
+        512
+      ],
+      "warm_metrics": {
+        "device": "cuda",
+        "load_seconds": 0.0,
+        "inference_seconds": 4.277,
+        "peak_vram_bytes": 2007410176
+      },
+      "status": "PASS",
+      "test_seconds": 387.119,
+      "prior_attempt": {
+        "status": "BLOCKED",
+        "error": "Checkpoint transfer interrupted: 515516399 bytes received, 131407238 remaining; no PNG generated.",
+        "test_seconds": null,
+        "traceback": null
+      }
+    },
+    "Stable Video Diffusion": {
+      "status": "BLOCKED",
+      "load_seconds": null,
+      "inference_seconds": null,
+      "device": null,
+      "peak_vram_bytes": null,
+      "error": "Paused at the user's request. The checkpoint snapshot is incomplete; a previous download attempt stalled with no progress for more than 15 minutes. No further download or inference was performed, and no MP4 was generated.",
+      "checkpoint_incomplete_blobs": [
+        {
+          "path": "D:\\FastAPI-AI\\.cache\\huggingface\\models--stabilityai--stable-video-diffusion-img2vid\\blobs\\ae616c24393dd1854372b0639e5541666f7521cbe219669255e865cb7f89466a.incomplete",
+          "size_bytes": 440401920
+        },
+        {
+          "path": "D:\\FastAPI-AI\\.cache\\huggingface\\models--stabilityai--stable-video-diffusion-img2vid\\blobs\\cb552818963e736506c6693ffc279d59df423d63aced38902ea4373ab1fd2932.incomplete",
+          "size_bytes": 555745280
+        }
+      ],
+      "cache_preserved": true,
+      "continuation": "Resume only after explicit user approval; preserve the existing cache, complete and verify the checkpoint before requesting approval for memory-sensitive inference. The current pipeline has CPU offload, VAE slicing, U-Net forward chunking, and decode_chunk_size=2 enabled."
+    },
+    "Shap-E": {
+      "output_files": [
+        "D:\\FastAPI-AI\\outputs\\models_3d\\416acd4248fb4dbcbc3f2007ffc18472.obj",
+        "D:\\FastAPI-AI\\outputs\\models_3d\\574e58715d854abb8233414cfb25a46c.obj"
+      ],
+      "output_bytes": 3132869,
+      "vertices": 30524,
+      "faces": 61060,
+      "device": "cuda",
+      "load_seconds": "1844.395",
+      "inference_seconds": "27.118",
+      "peak_vram_bytes": "2369751040",
+      "first_request_seconds": 1889.985,
+      "warm_request_seconds": 35.627,
+      "warm_output_bytes": 1851031,
+      "warm_vertices": 18350,
+      "warm_faces": 36708,
+      "checkpoint": {
+        "model_id": "openai/shap-e",
+        "snapshot_path": "D:\\FastAPI-AI\\.cache\\huggingface\\models--openai--shap-e\\snapshots\\7bd337afdea1c17842e1c3cc45c4e268356dba40",
+        "weights_loaded": [
+          {
+            "path": "D:\\FastAPI-AI\\.cache\\huggingface\\models--openai--shap-e\\snapshots\\7bd337afdea1c17842e1c3cc45c4e268356dba40\\prior\\diffusion_pytorch_model.bin",
+            "size_bytes": 1262937295
+          },
+          {
+            "path": "D:\\FastAPI-AI\\.cache\\huggingface\\models--openai--shap-e\\snapshots\\7bd337afdea1c17842e1c3cc45c4e268356dba40\\renderer\\diffusion_pytorch_model.bin",
+            "size_bytes": 905200536
+          },
+          {
+            "path": "D:\\FastAPI-AI\\.cache\\huggingface\\models--openai--shap-e\\snapshots\\7bd337afdea1c17842e1c3cc45c4e268356dba40\\shap_e_renderer\\diffusion_pytorch_model.bin",
+            "size_bytes": 905233202
+          },
+          {
+            "path": "D:\\FastAPI-AI\\.cache\\huggingface\\models--openai--shap-e\\snapshots\\7bd337afdea1c17842e1c3cc45c4e268356dba40\\text_encoder\\pytorch_model.bin",
+            "size_bytes": 494664885
+          }
+        ],
+        "total_weight_bytes": 3568035918,
+        "loaded_by_real_inference": true
+      },
+      "warm_metrics": {
+        "device": "cuda",
+        "load_seconds": 0.0,
+        "inference_seconds": 26.029,
+        "peak_vram_bytes": 2365456384
+      },
+      "status": "PASS",
+      "test_seconds": 1925.629,
+      "prior_attempt": {
+        "status": "NOT TESTED",
+        "error": "Not reached by the sequential inference run.",
+        "test_seconds": null,
+        "traceback": null
+      }
+    }
+  },
+  "outputs_directory": "D:\\FastAPI-AI\\outputs",
+  "download_troubleshooting": {
+    "root_cause": "Intermittent DNS resolution/reachability of the Hugging Face CDN host used for Xet ranges; this is not a repository permission or gated-model failure.",
+    "evidence": [
+      "The Hub metadata/API request succeeded and all five repositories were public, private=false, gated=false.",
+      "The active Xet log recorded 14 'No such host is known' request errors for us.aws.cdn.hf.co.",
+      "A system DNS lookup for us.aws.cdn.hf.co timed out once, then resolved on a later check; huggingface.co and cas-server.xethub.hf.co resolved.",
+      "Earlier transfers also recorded IncompleteRead and Windows ConnectionResetError 10054. A prior Xet 416 occurred during range reconstruction and was followed by successful 206 range responses.",
+      "No 401, 403, 429, or 5xx response was observed in the available transfer evidence.",
+      "An explicit HF_HUB_OFFLINE probe for Bark was blocked at the model-metadata API call; it did not reach inference. With offline mode unset, the completed Bark checkpoint loaded from cache in 11.338 s and both inference requests passed.",
+      "TinySD resumed its existing partial checkpoint transfer with the 300-second download timeout; all three weight files then loaded successfully and both CUDA PNG inferences passed. The cache was not deleted.",
+      "Shap-E fetched the remaining model files with the same timeout settings; the complete 3,568,035,918-byte set of weights loaded successfully and both CUDA mesh inferences passed."
+    ],
+    "action_taken": {
+      "download_timeout_seconds": 300,
+      "etag_timeout_seconds": 60,
+      "xet_high_performance": true,
+      "package_versions_changed": false,
+      "cache_deleted": false,
+      "result": "TinyLlama and Bark checkpoints completed and passed SHA-256 verification; TinySD and Shap-E completed their full snapshots and produced real CUDA inference outputs. The TinySD partial cache was resumed in place. No cache was deleted and no dependency versions changed. SVD was not resumed or run after the user requested a pause."
+    },
+    "inference_log": "D:\\FastAPI-AI\\reports\\tinyllama-download-inference.log",
+    "bark_cache_probe_log": "D:\\FastAPI-AI\\reports\\bark-cache-verification.log",
+    "bark_cached_run_log": "D:\\FastAPI-AI\\reports\\bark-warm-cache-inference.log",
+    "tinysd_inference_log": "D:\\FastAPI-AI\\reports\\tinysd-download-inference.log",
+    "shape_inference_log": "D:\\FastAPI-AI\\reports\\shape-download-inference.log",
+    "svd_download_and_inference_paused": true,
+    "svd_continuation_instructions": "Do not resume the incomplete SVD checkpoint or run inference until explicitly requested by the user. Preserve the existing .incomplete blobs. When authorized, resume using the existing cache and model ID, verify the full snapshot, then separately obtain approval before memory-sensitive inference."
+  }
+}

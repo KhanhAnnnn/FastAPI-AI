@@ -1,0 +1,376 @@
+{
+  "timestamp": "2026-10-15T18:24:14Z",
+  "environment": {
+    "python": "3.13.2",
+    "pytorch": "2.7.1+cu126",
+    "torch_device": "cuda",
+    "gpu_name": "Quadro P4000",
+    "vram_total_mb": 8191.9,
+    "ram_total_gb": 63.83,
+    "disk_free_gb": 56.92,
+    "qdrant_mode": "local",
+    "collection_name": "knowledgebase"
+  },
+  "phase5_background_processing": {
+    "status": "PASS",
+    "english_document": {
+      "document_id": "27e97de4-731f-4e8b-9d9a-ba2d4567d2fa",
+      "filename": "tinyllama_rag_guide.pdf",
+      "indexed_chunks": 2,
+      "processing_seconds": 10.06
+    },
+    "vietnamese_document": {
+      "document_id": "7d2d6977-5605-4f2c-93e0-c90075beea4f",
+      "filename": "fastapi_qdrant_vn.pdf",
+      "indexed_chunks": 2,
+      "processing_seconds": 2.01
+    },
+    "conflict_prevention": "PASS",
+    "crash_recovery": "PASS"
+  },
+  "phase6_rag_chat_scenarios": {
+    "status": "PASS",
+    "english_qa": {
+      "query": "What is the context window size of TinyLlama according to the document?",
+      "answer": "According to the given context, TinyLlama runs inference with a 2048 token context window in its local FastAPI deployment.",
+      "sources": 2,
+      "total_ms": 7983.73
+    },
+    "vietnamese_qa": {
+      "query": "FastAPI dat duoc hieu nang cao tuong duong cong nghe nao va nho nhung thu vien gi?",
+      "answer": "Yes, FastAPI is a highly scalable and efficient web framework for building RESTful APIs with Python 3.8+. It offers advanced features such as Type Hints, TypeScript support, and TypeScript/JavaScript interoperability. FastAPI can be used to build both static and dynamic APIs, and it provides various tools for testing, documentation, and deployment. It has been widely adopted by developers due to its ease of use, performance, and flexibility.",
+      "sources": 2,
+      "total_ms": 9727.34
+    },
+    "english_refusal_1": {
+      "query": "What is the traditional recipe for baking chocolate brownies?",
+      "answer": "I could not find sufficient information in the provided documents to answer this question.",
+      "sources": 0,
+      "generation_ms": 0.0
+    },
+    "english_refusal_2": {
+      "query": "What is the chemical formula for photosynthesis in botany?",
+      "answer": "I could not find sufficient information in the provided documents to answer this question.",
+      "sources": 0,
+      "generation_ms": 0.0
+    },
+    "document_filtering": {
+      "query_en": "What is the SwiGLU activation function and RMSNorm in TinyLlama?",
+      "query_vn": "FastAPI su dung Starlette va Pydantic nhu the nao?",
+      "isolated": true
+    }
+  },
+  "benchmark_20_queries": {
+    "total_queries": 20,
+    "recall_at_3": 1.0,
+    "mrr": 0.9688,
+    "refusal_accuracy": 0.75,
+    "citation_fidelity": 0.95,
+    "retrieval_latency_ms": {
+      "avg": 338.13,
+      "p95": 452.17
+    },
+    "generation_latency_ms": {
+      "avg": 10509.24,
+      "p95": 15371.51
+    },
+    "total_latency_ms": {
+      "avg": 9271.03,
+      "p95": 15879.07
+    },
+    "details": [
+      {
+        "id": 1,
+        "type": "qa",
+        "query": "What is TinyLlama and how many tokens was it trained on?",
+        "sources_count": 2,
+        "hit": true,
+        "reciprocal_rank": 1.0,
+        "refusal_accurate": null,
+        "retrieval_ms": 297.2,
+        "generation_ms": 8747.01,
+        "total_ms": 9044.25,
+        "answer_preview": "TinyLlama is a small 1.1B language model pretrained on 3 trillion tokens. It was trained on a combination of Wikipedia t..."
+      },
+      {
+        "id": 2,
+        "type": "qa",
+        "query": "What normalization layer is used in TinyLlama architecture?",
+        "sources_count": 2,
+        "hit": true,
+        "reciprocal_rank": 1.0,
+        "refusal_accurate": null,
+        "retrieval_ms": 290.39,
+        "generation_ms": 8971.76,
+        "total_ms": 9262.21,
+        "answer_preview": "The Llama 2 architecture of TinyLlama uses the RMSNorm normalization layer for its token embeddings. This layer applies ..."
+      },
+      {
+        "id": 3,
+        "type": "qa",
+        "query": "What activation function does TinyLlama use?",
+        "sources_count": 2,
+        "hit": true,
+        "reciprocal_rank": 1.0,
+        "refusal_accurate": null,
+        "retrieval_ms": 298.2,
+        "generation_ms": 8453.71,
+        "total_ms": 8751.96,
+        "answer_preview": "The question doesn't specify which activation function TinyLlama uses in its implementation of the Llama 2 architecture...."
+      },
+      {
+        "id": 4,
+        "type": "qa",
+        "query": "What precision is used when running TinyLlama inference?",
+        "sources_count": 2,
+        "hit": true,
+        "reciprocal_rank": 1.0,
+        "refusal_accurate": null,
+        "retrieval_ms": 291.95,
+        "generation_ms": 10496.0,
+        "total_ms": 10787.99,
+        "answer_preview": "When running TinyLlama inference with float16 precision in our local FastAPI deployment, it uses the SwiGLU activation f..."
+      },
+      {
+        "id": 5,
+        "type": "qa",
+        "query": "What is the maximum context window of TinyLlama?",
+        "sources_count": 2,
+        "hit": true,
+        "reciprocal_rank": 1.0,
+        "refusal_accurate": null,
+        "retrieval_ms": 398.67,
+        "generation_ms": 6151.64,
+        "total_ms": 6550.36,
+        "answer_preview": "The maximum context window for TinyLlama is 2048 tokens (approximately 2 million characters)."
+      },
+      {
+        "id": 6,
+        "type": "qa",
+        "query": "How are hallucinations prevented in this RAG system?",
+        "sources_count": 2,
+        "hit": true,
+        "reciprocal_rank": 1.0,
+        "refusal_accurate": null,
+        "retrieval_ms": 309.12,
+        "generation_ms": 14595.21,
+        "total_ms": 14904.38,
+        "answer_preview": "The RAG (Representational Attention Generative) system used in this context prevents hallucinations by ensuring that the..."
+      },
+      {
+        "id": 7,
+        "type": "qa",
+        "query": "What happens when similarity scores fall below the threshold?",
+        "sources_count": 2,
+        "hit": true,
+        "reciprocal_rank": 1.0,
+        "refusal_accurate": null,
+        "retrieval_ms": 295.77,
+        "generation_ms": 9288.98,
+        "total_ms": 9584.8,
+        "answer_preview": "When similarity scores fall below the threshold for the retrieval process in a grounded Retrieval-Augmented Generation (..."
+      },
+      {
+        "id": 8,
+        "type": "qa",
+        "query": "What does the system prompt instruct TinyLlama to do with pages?",
+        "sources_count": 2,
+        "hit": true,
+        "reciprocal_rank": 1.0,
+        "refusal_accurate": null,
+        "retrieval_ms": 338.07,
+        "generation_ms": 7887.86,
+        "total_ms": 8225.99,
+        "answer_preview": "The system prompt instructs TinyLlama to use retrieved chunks as input for generation in a grounded Retrieval-Augmented ..."
+      },
+      {
+        "id": 9,
+        "type": "qa",
+        "query": "FastAPI la gi va ho tro tu phien ban Python nao?",
+        "sources_count": 2,
+        "hit": true,
+        "reciprocal_rank": 1.0,
+        "refusal_accurate": null,
+        "retrieval_ms": 306.48,
+        "generation_ms": 8274.31,
+        "total_ms": 8580.85,
+        "answer_preview": "Sure! FastAPI is a Python web framework with high performance and ease of use for building RESTful APIs. It was develope..."
+      },
+      {
+        "id": 10,
+        "type": "qa",
+        "query": "FastAPI co toc do tuong duong voi nhung cong nghe nao?",
+        "sources_count": 2,
+        "hit": true,
+        "reciprocal_rank": 1.0,
+        "refusal_accurate": null,
+        "retrieval_ms": 355.12,
+        "generation_ms": 16677.05,
+        "total_ms": 17032.22,
+        "answer_preview": "FastAPI là một công nghệ hỗ trợ tạo API và phát triển API có thể được sử dụng để giảm thời gian lựa chọn và tối ưu việc ..."
+      },
+      {
+        "id": 11,
+        "type": "qa",
+        "query": "FastAPI giam thieu bao nhieu phan tram loi cua lap trinh vien?",
+        "sources_count": 2,
+        "hit": true,
+        "reciprocal_rank": 1.0,
+        "refusal_accurate": null,
+        "retrieval_ms": 314.57,
+        "generation_ms": 11066.33,
+        "total_ms": 11380.94,
+        "answer_preview": "Yes, FastAPI provides a high degree of customization for building RESTful APIs with Python 3.8+. It offers features such..."
+      },
+      {
+        "id": 12,
+        "type": "qa",
+        "query": "FastAPI co ho tro sinh tai lieu tu dong khong?",
+        "sources_count": 2,
+        "hit": true,
+        "reciprocal_rank": 0.5,
+        "refusal_accurate": null,
+        "retrieval_ms": 408.65,
+        "generation_ms": 9020.52,
+        "total_ms": 9429.22,
+        "answer_preview": "No, FastAPI is not designed for creating RESTful APIs with static content such as HTML pages. It is a full-stack web dev..."
+      },
+      {
+        "id": 13,
+        "type": "qa",
+        "query": "Co so du lieu vector nao duoc su dung de luu tru vector?",
+        "sources_count": 2,
+        "hit": true,
+        "reciprocal_rank": 1.0,
+        "refusal_accurate": null,
+        "retrieval_ms": 385.77,
+        "generation_ms": 10905.42,
+        "total_ms": 11291.26,
+        "answer_preview": "Certainly! In this context, \"vector\" refers to a mathematical representation of data, such as an image or text, which ca..."
+      },
+      {
+        "id": 14,
+        "type": "qa",
+        "query": "Qdrant su dung phep do khoang cach nao cho vector?",
+        "sources_count": 2,
+        "hit": true,
+        "reciprocal_rank": 1.0,
+        "refusal_accurate": null,
+        "retrieval_ms": 304.74,
+        "generation_ms": 10417.57,
+        "total_ms": 10722.38,
+        "answer_preview": "Certainly! Qdrant is a tool for calculating cosine similarity between vectors in a set of documents. It uses a matrix re..."
+      },
+      {
+        "id": 15,
+        "type": "qa",
+        "query": "Mo hinh Jina Embeddings v2 ho tro context toi da bao nhieu token?",
+        "sources_count": 2,
+        "hit": true,
+        "reciprocal_rank": 1.0,
+        "refusal_accurate": null,
+        "retrieval_ms": 401.15,
+        "generation_ms": 9550.57,
+        "total_ms": 9951.74,
+        "answer_preview": "Yes, Jina Embeddings v2 uses a maximum of 8,192 tokens (or 768 vectors) for each input document. This is because the mod..."
+      },
+      {
+        "id": 16,
+        "type": "qa",
+        "query": "Vector embedding co bao nhieu chieu va kieu du lieu gi?",
+        "sources_count": 2,
+        "hit": true,
+        "reciprocal_rank": 1.0,
+        "refusal_accurate": null,
+        "retrieval_ms": 773.17,
+        "generation_ms": 15045.13,
+        "total_ms": 15818.38,
+        "answer_preview": "Yes, Vector embedding is used in Jina Embeddings v2 base to convert text into a set of vectors with different dimensions..."
+      },
+      {
+        "id": 17,
+        "type": "refusal",
+        "query": "What is the highest mountain peak in the world?",
+        "sources_count": 0,
+        "hit": null,
+        "reciprocal_rank": null,
+        "refusal_accurate": true,
+        "retrieval_ms": 435.28,
+        "generation_ms": 0.0,
+        "total_ms": 435.29,
+        "answer_preview": "I could not find sufficient information in the provided documents to answer this question."
+      },
+      {
+        "id": 18,
+        "type": "refusal",
+        "query": "What is the traditional recipe for baking chocolate brownies?",
+        "sources_count": 0,
+        "hit": null,
+        "reciprocal_rank": null,
+        "refusal_accurate": true,
+        "retrieval_ms": 70.06,
+        "generation_ms": 0.0,
+        "total_ms": 70.07,
+        "answer_preview": "I could not find sufficient information in the provided documents to answer this question."
+      },
+      {
+        "id": 19,
+        "type": "refusal",
+        "query": "Explain quantum entanglement in simple terms.",
+        "sources_count": 3,
+        "hit": null,
+        "reciprocal_rank": null,
+        "refusal_accurate": false,
+        "retrieval_ms": 67.22,
+        "generation_ms": 13107.94,
+        "total_ms": 13175.25,
+        "answer_preview": "Quantum entanglement refers to the phenomenon where two particles (such as photons or electrons) become connected instan..."
+      },
+      {
+        "id": 20,
+        "type": "refusal",
+        "query": "What is the chemical formula for photosynthesis in botany?",
+        "sources_count": 0,
+        "hit": null,
+        "reciprocal_rank": null,
+        "refusal_accurate": true,
+        "retrieval_ms": 421.07,
+        "generation_ms": 0.0,
+        "total_ms": 421.1,
+        "answer_preview": "I could not find sufficient information in the provided documents to answer this question."
+      }
+    ]
+  },
+  "regression_checks": {
+    "status": "PASS",
+    "health_endpoint": "OK",
+    "openapi_routes_verified": [
+      "/generate/text",
+      "/generate/audio",
+      "/generate/image",
+      "/generate/video",
+      "/generate/3d",
+      "/rag/documents/upload",
+      "/rag/documents",
+      "/rag/documents/{document_id}/process",
+      "/rag/documents/{document_id}/status",
+      "/rag/search",
+      "/rag/chat",
+      "/rag/index/status"
+    ],
+    "collection_points_persisted": 21,
+    "final_process_rss_mb": 5778.92,
+    "final_vram_allocated_mb": 16.25
+  },
+  "summary": {
+    "overall_status": "PASS",
+    "phase5_background_processing": "PASS",
+    "phase6_tinyllama_rag_chat": "PASS",
+    "benchmark_recall_at_3": 1.0,
+    "benchmark_mrr": 0.9688,
+    "benchmark_refusal_accuracy": 0.75,
+    "benchmark_citation_fidelity": 0.95,
+    "average_e2e_latency_ms": 9271.03,
+    "zero_regressions_verified": true
+  }
+}

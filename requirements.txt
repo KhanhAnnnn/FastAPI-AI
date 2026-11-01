@@ -1,0 +1,21 @@
+--extra-index-url https://download.pytorch.org/whl/cu126
+torch==2.7.1+cu126
+torchvision==0.22.1+cu126
+transformers==4.57.3
+diffusers==0.35.2
+accelerate==1.12.0
+safetensors==0.7.0
+huggingface-hub==0.36.0
+hf_xet==1.7.0
+fastapi==0.135.1
+uvicorn[standard]==0.41.0
+python-multipart==0.0.22
+pypdf==6.20.0
+numpy==2.2.6
+Pillow==12.1.1
+soundfile==0.13.1
+av==16.1.0
+psutil==7.2.2
+pytest==9.0.2
+httpx==0.28.1
+qdrant-client==1.19.1

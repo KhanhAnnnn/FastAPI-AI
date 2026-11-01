@@ -1,0 +1,13 @@
+.venv/
+.venv-genai/
+.cache/
+outputs/*
+!outputs/.gitkeep
+uploads/
+data/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+.vscode/
+.idea/
